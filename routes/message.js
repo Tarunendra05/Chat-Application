@@ -1,5 +1,5 @@
 const express = require('express');
-const {sendMessage, getAllMessage, deleteMessage} = require('../controller/messagecontroller');
+const {sendMessage, getAllMessage, deleteMessage, getMessageByUUID} = require('../controller/messagecontroller');
 const {getUserByUUID} = require('../controller/usercontroller');
 const {body} = require('express-validator');
 

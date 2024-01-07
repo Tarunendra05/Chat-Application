@@ -1,24 +1,22 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 exports.authorise = (req, res, next) => {
 
-    if(!req.headers['authorization']) {
-        return req.status(403).json({errors: "inculde the bearer token"});
-    }
+    if(!req.headers['authorization'])
+    return res.status(403).json({errors: "Inculde the bearer token"});
 
-    const header = req.headers['authorization'];
-    const tokenArray = header.split(" "); //bearer
-    const token = tokenArray[1];
-    const secretKey = process.env.REACT_APP_SECRET_KEY;
+    const header = req.headers['authorization']
+    const tokenArray = header.split(" ") //bearer
+    const token = tokenArray[1]
 
-    jwt.verify(token, {secretKey}, function(err, decoded) {
+    jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
 
-        if(err) {
-            return res.status(403).json({errors: "Unauthorised !"});
+        if(err){
+            const erro = err.message;
+            return res.status(403).json({errors: erro})
         }
 
         req.user = {email: decoded.email, uuid: decoded.uuid};
-        next();
+        next()
     });
-} 
+}

@@ -27,7 +27,7 @@ async function register(req, res) {
 
     await user.save()
 
-    const token = generateToken({email: user.email, uid: user.uid})
+    const token = generateToken({email: user.email, uuid: user.uuid})
 
     res.send({user: exposeUserDetails(user), token: token})
 }
@@ -40,14 +40,14 @@ async function login(req, res) {
     if(!errors.isEmpty())
     return res.status(400).json({errors: errors.array()})
 
-    await connect()
     
     const user = await getUserByEmail(email)
     const match = await bcrypt.compare(password, user.password)
     if(match){
         const token = generateToken({email: user.email, uuid: user.uuid})
         res.send({user: exposeUserDetails(user), token: token})
-    } else
+    }
+    else
     return res.status(403).json({errors: "Incorrect credentials"});
 }
 
@@ -62,7 +62,7 @@ async function getUserByUUID(uuid) {
 }
 
 function generateToken(user) {
-    return jwt.sign(user, process.env.REACT_APP_SECRET_KEY, {expiresIn: "1h"})
+    return jwt.sign(user, process.env.SECRET_KEY, {expiresIn:"1h"})
 }
 
 function exposeUserDetails(user) {

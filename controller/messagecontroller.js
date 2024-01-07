@@ -8,28 +8,27 @@ const {validationResult} = require('express-validator');
 async function sendMessage(req, res) {
 
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()});
-    }
+    if(!errors.isEmpty())
+    return res.status(400).json({errors: errors.array()});
 
-    await connect();
+    await connect()
 
     const message = new Message({
         uuid: v4(), 
         sender: req.user.uuid,
-        reciever: req.boyd.rec_id,
+        receiver: req.body.rec_id,
         content: req.body.text,
     })
 
-    await message.save();
+    await message.save()
 
     res.send("Send message route");
 }
 
 async function getAllMessage(req, res) {
 
-    const message = await Message.find({reciever: req.params.reciever_id});
-    res.send(message);
+    const messages = await Message.find({receiver: req.params.receiver_id});
+    res.send(messages);
 }
 
 async function deleteMessage(req, res) {
@@ -37,11 +36,12 @@ async function deleteMessage(req, res) {
     res.send("Message deleted successfully!");
 }
 
-async function getMessageWithUUID(req, res) {
-    await connect();
+async function getMessageByUUID(uuid) {
+    await connect()
     return await Message.findOne({uuid : uuid}).exec();
 }
 
 exports.sendMessage = sendMessage;
 exports.getAllMessage = getAllMessage;
 exports.deleteMessage = deleteMessage;
+exports.getMessageByUUID = getMessageByUUID;

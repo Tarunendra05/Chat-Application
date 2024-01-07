@@ -1,8 +1,9 @@
 const express = require("express");
+require('dotenv').config();
 const {userrouter} = require("./routes/user");
 const {messagerouter} = require("./routes/message");
 const {authorise} = require("./authorise");
-require('dotenv').config();
+
 
 const app = express();
 const port = 3000;
