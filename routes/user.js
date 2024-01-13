@@ -1,8 +1,9 @@
 const express = require("express");
 
 const router = express.Router();
-const {register, getUserByEmail, login} = require('../controller/usercontroller');
+const {register, getUserByEmail, login, grantNewToken} = require('../controller/usercontroller');
 const {body} = require('express-validator');
+const {RefreshToken} = require('../models/refreshtokenmodel');
 
 router.get('/:id', (req, res) => {
     res.send(req.params.id);
@@ -28,5 +29,14 @@ router.post('/login', body('email').isEmail().custom(
 ),
 body('password').isLength({min:6, max:14}),
 login);
+
+router.post('/refreshtoken', body('rtoken').custom(async(token)=> {
+    await connect()
+    const token_details = await RefreshToken.findOne({token: token}).exec()
+
+    if(!token_details) {
+        return Promise.reject("Invalid token");
+    }
+}), grantNewToken)
 
 exports.userrouter = router;

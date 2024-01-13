@@ -12,8 +12,7 @@ exports.authorise = (req, res, next) => {
     jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
 
         if(err){
-            const erro = err.message;
-            return res.status(403).json({errors: erro})
+            return res.status(403).json({errors: "Unauthorized !"})
         }
 
         req.user = {email: decoded.email, uuid: decoded.uuid};
